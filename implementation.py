@@ -31,7 +31,7 @@ traceback_matrix[0:,1:] = "H"
 traceback_matrix[1:,0] = "V"
 
 
-## DEFINING THE LOOP FOR SCORING AND TRACEBACK
+## DEFINING THE LOOP FOR SCORING AND TRACEBACK MATRICES
 for i in range(1, len(seq1) +1):
 	for j in range(1, len(seq2) + 1):
 		# Diagonal score
@@ -60,6 +60,23 @@ for i in range(1, len(seq1) +1):
 			traceback_matrix[i,j] = ''.join(direction)
 			scoring_matrix[i,j] = best_score
 
-print(traceback_matrix)
-print(scoring_matrix)
+## TRACEBACK
+final_alignment = []
+
+def traceback(i, j, aligned_seq1, aligned_seq2):
+	# base case
+	if i == 0 and j == 0:
+		final_alignment.append((aligned_seq1, aligned_seq2))
+		return
+
+	for direction in traceback_matrix[i,j]:
+		if direction == "D":
+			traceback(i-1, j-1, seq1[i-1] + aligned_seq1, seq2[j-1] + aligned_seq2)
+		if direction == "V":
+			traceback(i-1, j, seq1[i-1] + aligned_seq1, '-' + aligned_seq2)
+		if direction == "H":
+			traceback(i, j-1, '-' + aligned_seq1, seq2[j-1] + aligned_seq2)
+
+traceback(len(seq1), len(seq2), "", "")
+
 
