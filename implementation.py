@@ -1,12 +1,12 @@
 import numpy as np
 # input of sequences
-seq1 = "ACGATACG"
-seq2 = "TACGTCG"
+seq1 = input("Enter first sequence: ")
+seq2 = input("Enter second sequence: ")
 
 # scoring metrics
-match_score = 1
-mismatch_score = -1
-gap_score = -2
+match_score = int(input("Enter score for matching: "))
+mismatch_score = int(input("Enter penalty for mismatch: "))
+gap_score = int(input("Enter penalty for a gap: "))
 
 # Need to build (1) scoring matrix and (2) traceback matrix
 # Scoring matrix: stores scores for local alignments
@@ -49,16 +49,13 @@ for i in range(1, len(seq1) +1):
 		direction = []
 		if diag_score == best_score:
 			direction.append("D")
-			traceback_matrix[i,j] = ''.join(direction)
-			scoring_matrix[i,j] = best_score
 		if vert_score == best_score:
 			direction.append("V")
-			traceback_matrix[i,j] = ''.join(direction)
-			scoring_matrix[i,j] = best_score
 		if horiz_score == best_score:
 			direction.append("H")
-			traceback_matrix[i,j] = ''.join(direction)
-			scoring_matrix[i,j] = best_score
+
+		traceback_matrix[i,j] = ''.join(direction)
+		scoring_matrix[i,j] = best_score
 
 ## TRACEBACK
 final_alignment = []
@@ -78,5 +75,14 @@ def traceback(i, j, aligned_seq1, aligned_seq2):
 			traceback(i, j-1, '-' + aligned_seq1, seq2[j-1] + aligned_seq2)
 
 traceback(len(seq1), len(seq2), "", "")
-
+print("The Scoring matrix is:\n", scoring_matrix, "\n")
+print("The Traceback matrix is:\n", traceback_matrix, "\n")
+print("Optimal alignments:\n")
+for alignment in final_alignment:
+	first_seq = alignment[0]
+	second_seq = alignment[1]
+	print(first_seq)
+	print(second_seq)
+	print("")
+print("score: ", scoring_matrix[len(seq1), len(seq2)])
 
