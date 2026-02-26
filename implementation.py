@@ -1,4 +1,5 @@
 import numpy as np
+
 # input of sequences
 seq1 = input("Enter first sequence: ")
 seq2 = input("Enter second sequence: ")
@@ -34,19 +35,23 @@ traceback_matrix[1:,0] = "V"
 ## DEFINING THE LOOP FOR SCORING AND TRACEBACK MATRICES
 for i in range(1, len(seq1) +1):
 	for j in range(1, len(seq2) + 1):
+
 		# Diagonal score
 		if seq1[i-1] == seq2[j-1]:
 			diag_score = scoring_matrix[i-1,j-1] + match_score
 		else:
 			diag_score = scoring_matrix[i-1,j-1] + mismatch_score
+
 		# vertical score
 		vert_score = scoring_matrix[i-1, j] + gap_score
-		#horizontal
+
+		#horizontal score
 		horiz_score = scoring_matrix[i, j-1] + gap_score
 
 		## CONDITIONS TO FILL SCORING AND TRACEBACK MATRICES
 		best_score = max([diag_score, vert_score, horiz_score])
 		direction = []
+
 		if diag_score == best_score:
 			direction.append("D")
 		if vert_score == best_score:
@@ -61,6 +66,7 @@ for i in range(1, len(seq1) +1):
 final_alignment = []
 
 def traceback(i, j, aligned_seq1, aligned_seq2):
+
 	# base case
 	if i == 0 and j == 0:
 		final_alignment.append((aligned_seq1, aligned_seq2))
@@ -74,15 +80,20 @@ def traceback(i, j, aligned_seq1, aligned_seq2):
 		if direction == "H":
 			traceback(i, j-1, '-' + aligned_seq1, seq2[j-1] + aligned_seq2)
 
-traceback(len(seq1), len(seq2), "", "")
+traceback(len(seq1), len(seq2), "", "") # calling the traceback function, returns the alignments
+
+# Printing the outputs 
 print("The Scoring matrix is:\n", scoring_matrix, "\n")
 print("The Traceback matrix is:\n", traceback_matrix, "\n")
 print("Optimal alignments:\n")
+
+# for loop in case there is >1 optimal alignment
 for alignment in final_alignment:
 	first_seq = alignment[0]
 	second_seq = alignment[1]
 	print(first_seq)
 	print(second_seq)
 	print("")
-print("score: ", scoring_matrix[len(seq1), len(seq2)])
+
+print("score: ", scoring_matrix[len(seq1), len(seq2)]) #score is the bottom right cell in the matrix
 
